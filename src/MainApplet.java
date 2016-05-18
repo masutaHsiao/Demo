@@ -34,9 +34,8 @@ public class MainApplet extends PApplet {
 	public void mouseReleased(){
 		if(focusBtn!=null){
 			if(focusBtn.getTarget()!=null){
-			System.out.println("triggered");
-			prePage = nowPage;
-			nowPage = focusBtn.getTarget();			
+				prePage = nowPage;
+				nowPage = focusBtn.getTarget();			
 			}
 		}		
 	}
@@ -205,13 +204,25 @@ public class MainApplet extends PApplet {
 			float x = 350, y = 130;
 			float width = 580, height = 330, radius = 40;							
 			
-			//top circle
+			//top circle (index:0)
 			this.addBtn(new CircleBtn(MainApplet.this,x,y,radius,""));
 			this.getBtn().get(0).setRGB(136, 135, 91);
 			
-			//below big rect
-			this.addBtn(new RectBtn(MainApplet.this,x-radius,y + radius + 40,width,height,""));
-			this.getBtn().get(1).setRGB(115, 207, 215);
+			//below big rect (index:1)
+			this.addBtn(new RectBtn(MainApplet.this,x-radius,y + radius + 20,width,height,""));
+			this.getBtn().get(1).setRGB(240,133,26);
+			
+			//item box & input box (white) (index:2~9)
+			for(int i =0;i<4;i++){
+				this.addBtn(new RectBtn(MainApplet.this,x-radius + 10,y + radius + 20 + 10 + (10+70)*(i), 150,70,"Item" + i));
+				this.addBtn(new RectBtn(MainApplet.this,x-radius + 10 + 150 + 10 ,y + radius + 20 + 10 + (10+70)*(i), 400,70,"Input" + i));
+				this.getBtn().get(2+i*2).setRGB(135, 86, 118);
+				this.getBtn().get(3+i*2).setRGB(135, 86, 118);				
+			}
+			
+			//commit box (index:10)
+			this.addBtn(new RectBtn(MainApplet.this,x -radius  + 380, y + radius + 20 + height + 10, 200,80,"Commit"));
+			this.getBtn().get(10).setRGB(196, 70, 173);
 							
 		}
 
@@ -223,14 +234,28 @@ public class MainApplet extends PApplet {
 		
 	}		
 	
+	public void drawBtnk(){}
+	
 	public void setConnect(){
 		AbstractPage p0 = pages.get(0);
 		AbstractPage p1 = pages.get(1);
 		AbstractPage p2 = pages.get(2);
-		//p1Btn set target
-		p0.getBtn().get(1).setTarget(pages.get(1));
-		p0.getBtn().get(2).setTarget(pages.get(2));
-		p0.getBtn().get(3).setTarget(pages.get(3));
+		AbstractPage p3 = pages.get(3);
+		AbstractPage p4 = pages.get(4);
+		
+		//MainPage btn set target
+		for(int i =1;i<p0.getBtn().size();i++){
+			p0.getBtn().get(i).setTarget(pages.get(i));
+			p0.getBtn().get(i).setTarget(pages.get(i));
+			p0.getBtn().get(i).setTarget(pages.get(i));
+		}
+		
+		//ChoosePage btn set target
+		for(int i=1;i<p1.getBtn().size();i++){
+			p1.getBtn().get(i).setTarget(p4);
+			p2.getBtn().get(i).setTarget(p4);
+			p3.getBtn().get(i).setTarget(p4);
+		}
 				
 	}
 }

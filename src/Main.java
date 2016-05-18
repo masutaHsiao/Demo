@@ -11,7 +11,7 @@ private final static int windowWidth = 1200, windowHeight = 700;
 		applet.start();
 		applet.setFocusable(true);
 		
-		JFrame window = new JFrame("Star Wars Network Analysis");
+		JFrame window = new JFrame("Demo");
 		window.setContentPane(applet);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(windowWidth, windowHeight);

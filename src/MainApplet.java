@@ -126,7 +126,7 @@ public class MainApplet extends PApplet {
 				MainApplet.this.focusBtn = null;
 			}
 			
-			System.out.println(MainApplet.this.focusBtn);
+			//System.out.println(MainApplet.this.focusBtn);
 			if(MainApplet.this.focusBtn!=null)
 			System.out.println(MainApplet.this.focusBtn.getTarget());
 		}
@@ -185,7 +185,7 @@ public class MainApplet extends PApplet {
 				MainApplet.this.focusBtn = null;
 			}
 			
-			System.out.println(MainApplet.this.focusBtn);
+			//System.out.println(MainApplet.this.focusBtn);
 		}
 		
 	}	
@@ -221,9 +221,48 @@ public class MainApplet extends PApplet {
 			}
 			
 			//commit box (index:10)
-			this.addBtn(new RectBtn(MainApplet.this,x -radius  + 380, y + radius + 20 + height + 10, 200,80,"Commit"));
+			this.addBtn(new RectBtn(MainApplet.this,x -radius  + 380, y + radius + 20 + height + 10, 200,80,"Next"));
 			this.getBtn().get(10).setRGB(196, 70, 173);
 							
+		}
+
+		@Override
+		public void function() {
+			// TODO Auto-generated method stub
+			AbstractBtn btn = this.getBtn().get(10);
+			float btnX = btn.getX();
+			float btnY = btn.getY();
+			float btnWidth = btn.getWidth();
+			float btnHeight = btn.getHeight();
+			boolean hasFocus = false;
+			if( (MainApplet.this.mouseX > btnX && MainApplet.this.mouseX < btnX + btnWidth) && (MainApplet.this.mouseY > btnY && MainApplet.this.mouseY < btnY + btnHeight)){
+				btn.setIsFocus(true);				
+				hasFocus = true;
+				MainApplet.this.focusBtn = btn;		
+			}
+			else{
+				btn.setIsFocus(false);						
+			}
+			
+			if(!hasFocus){
+				MainApplet.this.focusBtn = null;
+			}
+			
+		}
+		
+	}		
+	
+	private class AreaPage extends AbstractPage{
+
+		AreaPage(MainApplet parent, String name) {
+			super(parent, name);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void setup() {
+			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
@@ -232,9 +271,11 @@ public class MainApplet extends PApplet {
 			
 		}
 		
-	}		
+	}
 	
-	public void drawBtnk(){}
+	public void functionBtn(){
+		
+	}
 	
 	public void setConnect(){
 		AbstractPage p0 = pages.get(0);

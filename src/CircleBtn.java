@@ -25,7 +25,7 @@ public class CircleBtn extends AbstractBtn {
 		
 		tmpParent.fill(255);
 		tmpParent.textSize(fontSize);
-		tmpParent.text(this.getName(), this.getX() - fontSize/3 , this.getY() + fontSize/3);
+		tmpParent.text(this.getName(), this.getX() - tmpParent.textWidth(this.getName()) /2 , this.getY() + fontSize/3);
 	}
 
 }

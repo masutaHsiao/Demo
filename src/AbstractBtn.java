@@ -4,7 +4,7 @@ public abstract class AbstractBtn{
 	private float x,y;
 	private float width, height,radius;	
 	private String btnName;
-	private Page target;
+	private AbstractPage target;
 	private MainApplet parent;
 	
 	private ArrayList<Integer> RGB;
@@ -95,11 +95,11 @@ public abstract class AbstractBtn{
 	}	
 	
 	
-	public Page getTarget(){
+	public AbstractPage getTarget(){
 		return target;
 	}
 	
-	public void setTarget(Page target){
+	public void setTarget(AbstractPage target){
 		this.target = target;
 	}
 	

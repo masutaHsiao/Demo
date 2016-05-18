@@ -5,49 +5,36 @@ import processing.core.PApplet;
 
 @SuppressWarnings("serial")
 public class MainApplet extends PApplet {	
-	private ArrayList<Page> pages = new ArrayList<Page>();
+	private ArrayList<AbstractPage> pages = new ArrayList<AbstractPage>();
 	private int theChosenOne;
-	private Page prePage;
-	private Page nowPage;
+	private AbstractPage prePage;
+	private AbstractPage nowPage;
 	private AbstractBtn focusBtn;
 	
 	public void setup(){	
 		theChosenOne = 0;
-		pages.add(p0Setup());	
-		pages.add(p1Setup("btn0"));
-		pages.add(p1Setup("btn1"));
-		pages.add(p1Setup("btn2"));
-		pages.add(p2Setup("problem"));
-		nowPage = (Page)pages.get(theChosenOne);
+		pages.add(new MainPage(this,"MainPage"));	
+		pages.add(new ChoosePage(this,"btn0"));
+		pages.add(new ChoosePage(this,"btn1"));
+		pages.add(new ChoosePage(this,"btn2"));
+		pages.add(new ReportPage(this,"report"));
+		nowPage = pages.get(theChosenOne);
 		
 		setConnect();
 	}
 	
 	public void draw(){
-		background(255);
-		
+		background(255);		
 		
 		nowPage.display();
-		
-		switch(nowPage.getType()){
-			case 0:
-				p0Fun();
-				break;
-			case 1:
-				p1Fun();
-				break;
-			case 2:
-				p2Fun();
-			default:
-				break;
-		}
-		
+		nowPage.function();					
 		
 	}
 	
 	public void mouseReleased(){
 		if(focusBtn!=null){
 			if(focusBtn.getTarget()!=null){
+			System.out.println("triggered");
 			prePage = nowPage;
 			nowPage = focusBtn.getTarget();			
 			}
@@ -80,142 +67,166 @@ public class MainApplet extends PApplet {
 	        default :
 	        	break;
 	     }
-	    nowPage = (Page)pages.get(theChosenOne);	    
+	    nowPage = pages.get(theChosenOne);	    
    	} 
 	
-	public Page p0Setup(){
-		int width = 600, height = 300;
-		float x = 300, y = 100;		
-		Page tmp = new Page(this,"MainPage");
-		ArrayList<AbstractBtn> tmpBtn = tmp.getBtn();
-		
-		//set page type to 0(using function 0)
-		tmp.setType(0);
-		
-		//Add top button
-		tmp.addBtn(new RectBtn(this,x,y,width,height,"Intro"));
-		
-		//Add below 3 buttons
-		for(int i=0;i<3;i++){
-			tmp.addBtn(new RectBtn(this, x + i * (15 + (width-30) /3), y+height + 10, (width-30) /3, height/3, "btn" + i));			
+	private class MainPage extends AbstractPage{
+
+		MainPage(MainApplet parent, String name) {
+			super(parent,name);
+			// TODO Auto-generated constructor stub
+			setup();
 		}
 		
-		//set all buttons color
-		int tmpInt = tmp.getBtn().size();
-		for(int i=0;i<tmpInt;i++){
-			tmpBtn.get(i).setRGB(33,114,194);
-		}							
+		@Override
+		public void setup() {
+			// TODO Auto-generated method stub
+			float width = 600, height = 300;
+			float x = 300, y = 100;				
+			ArrayList<AbstractBtn> thisBtn = this.getBtn();
+					
+			//Add top button
+			this.addBtn(new RectBtn(MainApplet.this,x,y,width,height,"Intro"));
+			
+			//Add below 3 buttons
+			for(int i=0;i<3;i++){
+				this.addBtn(new RectBtn(this.getParent(), x + i * (15 + (width-30) /3), y+height + 10, (width-30) /3, height/3, "btn" + i));			
+			}
+			
+			//set all buttons color
+			int tmpInt = this.getBtn().size();
+			for(int i=0;i<tmpInt;i++){
+				thisBtn.get(i).setRGB(33,114,194);
+			}							
+		}
+			
+		@Override
+		public void function() {
+			// TODO Auto-generated method stub
+			int btnNum = this.getBtn().size();
+			boolean hasFocus = false;		
 		
-		return tmp;
+			for(int i=1;i<btnNum;i++){
+				AbstractBtn tmpBtn = this.getBtn().get(i);
+				float btnX = tmpBtn.getX();
+				float btnY = tmpBtn.getY();
+				float btnWidth = tmpBtn.getWidth();
+				float btnHeight = tmpBtn.getHeight();
+				if( (MainApplet.this.mouseX > btnX && MainApplet.this.mouseX < btnX + btnWidth) && (MainApplet.this.mouseY > btnY && MainApplet.this.mouseY < btnY + btnHeight)){
+					tmpBtn.setIsFocus(true);				
+					hasFocus = true;
+					MainApplet.this.focusBtn = tmpBtn;		
+				}
+				else{
+					tmpBtn.setIsFocus(false);
+				}				
+				
+			}
+			
+			if(!hasFocus){
+				MainApplet.this.focusBtn = null;
+			}
+			
+			System.out.println(MainApplet.this.focusBtn);
+			if(MainApplet.this.focusBtn!=null)
+			System.out.println(MainApplet.this.focusBtn.getTarget());
+		}
+		
+	}
+	
+	private class ChoosePage extends AbstractPage{
+
+		ChoosePage(MainApplet parent, String name) {
+			super(parent, name);
+			setup();
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void setup() {
+			// TODO Auto-generated method stub
+			float x = 505, y = 80;		
+			float width = 190, height = 100, radius = 40;							
+										
+			//set top button
+			this.addBtn(new RectBtn(MainApplet.this, x , y, width, height, getName() ));
+			this.getBtn().get(0).setRGB(138,131,228);
+			
+			//set below circle buttons 
+			for(int i=0;i<16;i++){
+				this.addBtn(new CircleBtn(MainApplet.this,x + 190/5 + 190*3/5 * (int) (i%4-1) , y + height + 30 + radius +  (20 + 2 * radius) *(int) (i/4), radius, Character.toString((char)(65+i))));
+				this.getBtn().get(i+1).setRGB(238,121,198);
+			}				
+				
+			
+		}
+
+		@Override
+		public void function() {
+			// TODO Auto-generated method stub			
+			int btnNum = this.getBtn().size();
+			boolean hasFocus=false;
+				
+			for(int i=1;i<btnNum;i++){
+				AbstractBtn tmpBtn = this.getBtn().get(i); 
+				float x = tmpBtn.getX();
+				float y = tmpBtn.getY();
+				float radius = tmpBtn.getWidth()/2;
+				if(PApplet.dist(MainApplet.this.mouseX,MainApplet.this.mouseY,x,y) < radius){
+					tmpBtn.setIsFocus(true);
+					hasFocus = true;
+					MainApplet.this.focusBtn = tmpBtn;				
+				}
+				else{
+					tmpBtn.setIsFocus(false);
+				}
+			}
+			
+			if(!hasFocus){
+				MainApplet.this.focusBtn = null;
+			}
+			
+			System.out.println(MainApplet.this.focusBtn);
+		}
+		
+	}	
+	
+	private class ReportPage extends AbstractPage{
+
+		ReportPage(MainApplet parent, String name) {
+			super(parent, name);
+			setup();
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void setup() {
+			// TODO Auto-generated method stub
+			float x = 350, y = 130;
+			float width = 580, height = 330, radius = 40;							
+			
+			//top circle
+			this.addBtn(new CircleBtn(MainApplet.this,x,y,radius,""));
+			this.getBtn().get(0).setRGB(136, 135, 91);
+			
+			//below big rect
+			this.addBtn(new RectBtn(MainApplet.this,x-radius,y + radius + 40,width,height,""));
+			this.getBtn().get(1).setRGB(115, 207, 215);
+							
+		}
+
+		@Override
+		public void function() {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}		
 	
-	public void p0Fun(){
-		Page tmp = nowPage;
-		int size = tmp.getBtn().size();
-		boolean hasFocus = false;		
-	
-		for(int i=1;i<size;i++){
-			AbstractBtn tmpBtn = tmp.getBtn().get(i);
-			float btnX = tmpBtn.getX();
-			float btnY = tmpBtn.getY();
-			float btnWidth = tmpBtn.getWidth();
-			float btnHeight = tmpBtn.getHeight();
-			if( (this.mouseX > btnX && this.mouseX < btnX + btnWidth) && (this.mouseY > btnY && this.mouseY < btnY + btnHeight)){
-				tmpBtn.setIsFocus(true);				
-				hasFocus = true;
-				this.focusBtn = tmpBtn;		
-			}
-			else{
-				tmpBtn.setIsFocus(false);
-			}				
-			
-		}
-		
-		if(!hasFocus){
-			this.focusBtn = null;
-		}
-		
-		System.out.println(this.focusBtn);
-		if(this.focusBtn!=null)
-		System.out.println(this.focusBtn.getTarget());
-	}
-	
-	public Page p1Setup(String name){
-		float x = 505, y = 80;		
-		float width = 190, height = 100, radius = 40;			
-		Page tmp = new Page(this, name);		
-		
-		//set page type to 1 (using function 1)
-		tmp.setType(1);
-		
-		//set top button
-		tmp.addBtn(new RectBtn(this, x , y, width, height, name ));
-		tmp.getBtn().get(0).setRGB(138,131,228);
-		
-		//set below circle buttons 
-		for(int i=0;i<16;i++){
-			tmp.addBtn(new CircleBtn(this,x + 190/5 + 190*3/5 * (int) (i%4-1) , y + height + 30 + radius +  (20 + 2 * radius) *(int) (i/4), radius, Character.toString((char)(65+i))));
-			tmp.getBtn().get(i+1).setRGB(238,121,198);
-		}				
-			
-		return tmp;
-	}
-	
-	public void p1Fun(){
-		Page tmp = nowPage;
-		int size = tmp.getBtn().size();
-		boolean hasFocus=false;
-			
-		for(int i=1;i<size;i++){
-			AbstractBtn tmpBtn = tmp.getBtn().get(i); 
-			float x = tmpBtn.getX();
-			float y = tmpBtn.getY();
-			float radius = tmpBtn.getWidth()/2;
-			if(PApplet.dist(this.mouseX,this.mouseY,x,y) < radius){
-				tmpBtn.setIsFocus(true);
-				hasFocus = true;
-				this.focusBtn = tmpBtn;				
-			}
-			else{
-				tmpBtn.setIsFocus(false);
-			}
-		}
-		
-		if(!hasFocus){
-			this.focusBtn = null;
-		}
-		
-		System.out.println(this.focusBtn);
-	}
-	
-	public Page p2Setup(String name){
-		float x = 350, y = 130;
-		float width = 580, height = 330, radius = 40;			
-		Page tmp = new Page(this,name);		
-		
-		//set page type to 2
-		tmp.setType(2);
-		
-		//top circle
-		tmp.addBtn(new CircleBtn(this,x,y,radius,""));
-		tmp.getBtn().get(0).setRGB(136, 135, 91);
-		
-		//below big rect
-		tmp.addBtn(new RectBtn(this,x-radius,y + radius + 40,width,height,""));
-		tmp.getBtn().get(1).setRGB(115, 207, 215);
-		
-		
-		return tmp;
-	}
-	
-	public void p2Fun(){
-		
-	}
-	
 	public void setConnect(){
-		Page p0 = pages.get(0);
-		Page p1 = pages.get(1);
-		Page p2 = pages.get(2);
+		AbstractPage p0 = pages.get(0);
+		AbstractPage p1 = pages.get(1);
+		AbstractPage p2 = pages.get(2);
 		//p1Btn set target
 		p0.getBtn().get(1).setTarget(pages.get(1));
 		p0.getBtn().get(2).setTarget(pages.get(2));

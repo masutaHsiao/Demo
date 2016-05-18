@@ -6,12 +6,25 @@ public abstract class AbstractPage {
 	private int type;
 	private ArrayList<AbstractBtn>buttons;
 	
-	AbstractPage(MainApplet parent){
+	AbstractPage(MainApplet parent, String name){
 		this.parent = parent;
+		this.name = name;
 		buttons = new ArrayList<AbstractBtn>();
 	}	
 	
-	public abstract void display();
+	public abstract void setup();
+	
+	public void display() {
+		// TODO Auto-generated method stub
+		ArrayList<AbstractBtn> tmpBtn = this.getBtn();
+		int btnSize = tmpBtn.size();
+		for(int i=0;i<btnSize;i++){
+			tmpBtn.get(i).display();
+		}
+				
+	}
+	
+	public abstract void function();
 	
 	public void addBtn(AbstractBtn btn){
 		this.buttons.add(btn);
@@ -36,4 +49,8 @@ public abstract class AbstractPage {
 	public int getType(){
 		return type;
  	}
+	
+	public MainApplet getParent(){
+		return parent;
+	}
 }

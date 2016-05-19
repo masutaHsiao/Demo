@@ -18,6 +18,7 @@ public class MainApplet extends PApplet {
 		pages.add(new ChoosePage(this,"btn1"));
 		pages.add(new ChoosePage(this,"btn2"));
 		pages.add(new ReportPage(this,"report"));
+		pages.add(new AreaPage(this,"area"));
 		nowPage = pages.get(theChosenOne);
 		
 		setConnect();
@@ -25,10 +26,10 @@ public class MainApplet extends PApplet {
 	
 	public void draw(){
 		background(255);		
-		
+				
 		nowPage.display();
-		nowPage.function();					
-		
+		nowPage.function();
+					
 	}
 	
 	public void mouseReleased(){
@@ -46,27 +47,33 @@ public class MainApplet extends PApplet {
 	    switch(keyCode) {
 	    	case 97:	
 	        case 49:	        	
-	        	theChosenOne =0;	        	
+	        	theChosenOne =0;
+	        	nowPage = pages.get(theChosenOne);	 
 	            break;
 	        case 98:
 	        case 50:	       
-	        	theChosenOne =1;	        	
+	        	theChosenOne =1;
+	        	nowPage = pages.get(theChosenOne);	 
 	            break;
 	        case 99:
 	        case 51:	        	
 	        	theChosenOne =2;
+	        	nowPage = pages.get(theChosenOne);	 
 	            break;
 	        case 100:
 	        case 52 :	        	
 	        	theChosenOne =3;
+	        	nowPage = pages.get(theChosenOne);	 
 	        	break;	      
 	        case 101:
 	        case 53:
 	        	theChosenOne =4;
+	        	nowPage = pages.get(theChosenOne);	 
 	        default :
-	        	break;
+	        	break;	        	
 	     }
-	    nowPage = pages.get(theChosenOne);	    
+	    
+	       
    	} 
 	
 	private class MainPage extends AbstractPage{
@@ -220,7 +227,7 @@ public class MainApplet extends PApplet {
 				this.getBtn().get(3+i*2).setRGB(135, 86, 118);				
 			}
 			
-			//commit box (index:10)
+			//next box (index:10)
 			this.addBtn(new RectBtn(MainApplet.this,x -radius  + 380, y + radius + 20 + height + 10, 200,80,"Next"));
 			this.getBtn().get(10).setRGB(196, 70, 173);
 							
@@ -256,33 +263,69 @@ public class MainApplet extends PApplet {
 
 		AreaPage(MainApplet parent, String name) {
 			super(parent, name);
-			// TODO Auto-generated constructor stub
+			setup();
+			// TODO Auto-generated constructor stub			
 		}
 
 		@Override
 		public void setup() {
 			// TODO Auto-generated method stub
+			float x = 505, y = 80;		
+			float width = 190, height = 100;
 			
+			//top title			
+			this.addBtn(new RectBtn(MainApplet.this,x,y,width,height,"Area"));
+			this.getBtn().get(0).setRGB(64, 128, 256);
+			
+			//bellow four area
+			this.addBtn(new RectBtn(MainApplet.this, 550,210,100,100,"N"));
+			this.addBtn(new RectBtn(MainApplet.this, 495,320,100,100,"W"));
+			this.addBtn(new RectBtn(MainApplet.this, 605,320,100,100,"E"));
+			this.addBtn(new RectBtn(MainApplet.this, 550,430,100,100,"N"));
+			for(int i =1;i<5;i++){
+				this.getBtn().get(i).setRGB(256, 128, 64);
+			}					
+			
+			//next box
+			this.addBtn(new RectBtn(MainApplet.this,x + width + 50, y +height +3*100 , 150,50,"Commit"));
+			this.getBtn().get(5).setRGB(196, 70, 173);
 		}
 
 		@Override
 		public void function() {
 			// TODO Auto-generated method stub
+			boolean hasFocus = false;		
 			
+			for(int i=1;i<6;i++){
+				AbstractBtn tmpBtn = this.getBtn().get(i);
+				float btnX = tmpBtn.getX();
+				float btnY = tmpBtn.getY();
+				float btnWidth = tmpBtn.getWidth();
+				float btnHeight = tmpBtn.getHeight();
+				if( (MainApplet.this.mouseX > btnX && MainApplet.this.mouseX < btnX + btnWidth) && (MainApplet.this.mouseY > btnY && MainApplet.this.mouseY < btnY + btnHeight)){
+					tmpBtn.setIsFocus(true);				
+					hasFocus = true;
+					MainApplet.this.focusBtn = tmpBtn;		
+				}
+				else{
+					tmpBtn.setIsFocus(false);
+				}				
+				
+			}
+			
+			if(!hasFocus){
+				MainApplet.this.focusBtn = null;
+			}
 		}
-		
 	}
-	
-	public void functionBtn(){
 		
-	}
-	
 	public void setConnect(){
-		AbstractPage p0 = pages.get(0);
-		AbstractPage p1 = pages.get(1);
-		AbstractPage p2 = pages.get(2);
-		AbstractPage p3 = pages.get(3);
-		AbstractPage p4 = pages.get(4);
+		AbstractPage p0 = pages.get(0); //main
+		AbstractPage p1 = pages.get(1); //choose
+		AbstractPage p2 = pages.get(2); //choose
+		AbstractPage p3 = pages.get(3); //choose
+		AbstractPage p4 = pages.get(4); //report page
+		AbstractPage p5 = pages.get(5); //area
 		
 		//MainPage btn set target
 		for(int i =1;i<p0.getBtn().size();i++){
@@ -297,6 +340,14 @@ public class MainApplet extends PApplet {
 			p2.getBtn().get(i).setTarget(p4);
 			p3.getBtn().get(i).setTarget(p4);
 		}
+		
+		//ReportPage btn set target
+		p4.getBtn().get(10).setTarget(p5);
+		
+		//Area btn set target
+		p5.getBtn().get(5).setTarget(p0);
+		
+		
 				
 	}
 }

@@ -2,8 +2,7 @@ import java.util.ArrayList;
 
 public abstract class AbstractPage {
 	private MainApplet parent;
-	private String name;
-	private int type;
+	private String name;	
 	private ArrayList<AbstractBtn>buttons;
 	
 	AbstractPage(MainApplet parent, String name){
@@ -41,14 +40,6 @@ public abstract class AbstractPage {
 	public String getName(){
 		return name;
 	}
-	
-	public void setType(int type){
-		this.type = type;
-	}
-	
-	public int getType(){
-		return type;
- 	}
 	
 	public MainApplet getParent(){
 		return parent;

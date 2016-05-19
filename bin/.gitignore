@@ -1,8 +1,10 @@
-/ProblemPage.class
-/MainPage.class
-/ChosePage.class
-/ReportPage.class
-/MainApplet$MainPage.class
-/MainApplet$ChoosePage.class
-/MainApplet$ReportPage.class
+/AbstractBtn.class
+/AbstractPage.class
+/CircleBtn.class
+/Main.class
 /MainApplet$AreaPage.class
+/MainApplet$ChoosePage.class
+/MainApplet$MainPage.class
+/MainApplet$ReportPage.class
+/MainApplet.class
+/RectBtn.class
